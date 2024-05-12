@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Repository\UserRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -17,6 +18,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\Email(message: "Votre email est incorrect")]
+    #[Assert\Length(
+        min: 5,
+        minMessage: 'Votre email est trop court'
+    )]
+    #[Assert\NotBlank(message: 'Le champs mail doit être rempli')]
     private ?string $email = null;
 
     /**
@@ -29,9 +36,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\Length(
+        min: 8,
+        minMessage: 'Votre mot de passe est trop court'
+    )]
+    #[Assert\NotBlank(message: 'Le champs nom doit être rempli')]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 5,
+        minMessage: 'Votre nom est trop court'
+    )]
+    #[Assert\NotBlank(message: 'Le champs nom doit être rempli')]
     private ?string $name = null;
 
     public function getId(): ?int
@@ -61,22 +78,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     * @return list<string>
-     */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return $this->roles;
     }
 
-    /**
-     * @param list<string> $roles
-     */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
@@ -84,10 +90,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }

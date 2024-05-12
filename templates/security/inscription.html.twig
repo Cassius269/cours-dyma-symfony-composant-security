@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription
+{% endblock %}
+
+{% block body %}
+	<h1>Page Inscription</h1>
+	{{form_start(form,{'attr' :{'class':'form'}})}}
+	<div>
+		{{form_label(form.name)}}
+		{{form_widget(form.name)}}
+		{{form_help(form.name)}}
+		{{form_errors(form.name)}}
+	</div>
+	<div>
+		{{form_label(form.email)}}
+		{{form_widget(form.email)}}
+		{{form_help(form.email)}}
+		{{form_errors(form.email)}}
+	</div>
+	<div>
+		{{form_label(form.password)}}
+		{{form_widget(form.password)}}
+		{{form_help(form.password)}}
+		{{form_errors(form.password)}}
+	</div>
+	{{form_row(form.submit)}}
+	{{form_end(form)}}
+{% endblock %}

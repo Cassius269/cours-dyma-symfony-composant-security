@@ -1,0 +1,83 @@
+html {
+    font-size : 16px;
+}
+
+*{
+    margin:0;
+    padding: 0;
+    border:none;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 2rem;
+}
+
+header {
+    display: flex;
+  justify-content: space-between;
+}
+
+
+button {
+    display: block;
+    margin: auto;
+    height: 50px;
+    width: 148px;
+    font-size: 20px;
+    border-radius: 10px;
+    border: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+}
+
+header ul {
+    display: flex;
+  justify-content: space-around;
+}
+
+header nav {
+    flex: 1;
+}
+
+header p {
+    align-content: center;
+    flex:1
+}
+
+form {
+    background: #e6e3e3;
+    height: 433px;
+    padding: 30px;
+    margin-top: 2rem;  
+}
+
+form div {
+    display: flex;
+  flex-direction: column;
+  margin: 1rem;
+}
+
+form input {
+    height: 40px;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  padding: 2.1rem;
+
+}
+
+form :nth-child(4) button{ /* Cibler le bouton se trouvant dans la div submit du formulaire */
+    margin-left: 0;
+    background: #7b5a1b;
+    color: white;
+}
+
+form li {
+    color:red;
+}
