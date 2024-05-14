@@ -7,16 +7,24 @@
 					<a href="{{path('home')}}">Accueil</a>
 				</button>
 			</li>
-			<li>
-				<button>
-					<a href="{{path('inscription')}}">S'inscrire</a>
-				</button>
-			</li>
-			<li>
-				<button>
-					<a href="{{path('connexion')}}">Se Connecter</a>
-				</button>
-			</li>
+			{% if app.user != null %}
+				<li>
+					<button>
+						<a href="{{path('logout')}}">Déconnexion</a>
+					</button>
+				</li>
+			{% else %}
+				<li>
+					<button>
+						<a href="{{path('inscription')}}">S'inscrire</a>
+					</button>
+				</li>
+				<li>
+					<button>
+						<a href="{{path('connexion')}}">Se Connecter</a>
+					</button>
+				</li>
+			{% endif %}
 		</ul>
 	</nav>
 </header>
