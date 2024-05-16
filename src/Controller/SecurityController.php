@@ -27,7 +27,7 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword($userPasswordHasher->hashPassword($user, $user->getPassword()));
             $user->setCreatedAt(new \DateTimeImmutable());
-            $user->setRoles(["role_user"]);
+            $user->setRoles(["ROLE_USER"]);
             $entityManager->persist($user);
             $entityManager->flush();
             $this->addFlash('success', 'Vous êtes inscrit(e) maintenant');
