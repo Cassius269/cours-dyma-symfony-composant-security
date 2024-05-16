@@ -4,7 +4,29 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Page Inscription</h1>
+	<style>
+		form {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+		}
+
+		.divRememberMe input {
+			padding: 0;
+		}
+
+
+		.divRememberMe {
+			display: inline;
+		}
+
+		.divRememberMe label {
+			font-size: 20px;
+			position: relative;
+			bottom: 10px;
+		}
+	</style>
+	<h1>Connectez-vous</h1>
 	{% if error %}
 		<p>{{error.message | trans(error.messageData,'security')}}</p>
 	{% endif %}
@@ -14,6 +36,10 @@
 		<input type="email" id="email" name="_username" value="{{username}}">
 		<label for="password">Password</label><input type="password" name="_password">
 		<input type="submit">
+		<label>
+			<input type="checkbox" name="_remember_me">
+
+			Se Souvenir de moi</label>
 	</form>
 
 	<pre>

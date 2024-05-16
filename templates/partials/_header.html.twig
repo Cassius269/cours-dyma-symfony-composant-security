@@ -7,7 +7,7 @@
 					<a href="{{path('home')}}">Accueil</a>
 				</button>
 			</li>
-			{% if app.user != null %}
+			{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 				<li>
 					<button>
 						<a href="{{path('logout')}}">Déconnexion</a>
