@@ -24,6 +24,8 @@ class BlogController extends AbstractController
             throw $this->createNotFoundException('Aucun post trouvé à cet id');
         }
 
+        $this->denyAccessUnlessGranted('POST_EDIT', $post);
+
         $user = $security->getUser();
         // dd($user);
 
