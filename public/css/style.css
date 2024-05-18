@@ -90,3 +90,14 @@ form li {
     height: 300px;
     resize: none;
 }
+
+article {
+  background: antiquewhite;
+  padding: 2rem;
+}
+
+article p {
+    line-height: 1.5rem;
+    white-space: break-spaces;
+}
+

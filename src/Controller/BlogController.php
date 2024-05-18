@@ -17,14 +17,34 @@ class BlogController extends AbstractController
 {
     #[Route('/edit/{id}', name: 'form')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function index(Post $post, EntityManagerInterface $em, Request $request, Security $security): Response
+    public function index(Post $post = null, EntityManagerInterface $em, Request $request, Security $security): Response
     {
-        //$edit = $post ?? new Post();
-        if (isset($post)) {
-            dd('hello');
-        }
         //$post = new Post();
+        if (!$post) {
+            throw $this->createNotFoundException('Aucun post trouvé à cet id');
+        }
 
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Votre post a été mis à jour');
+
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('blog/index.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/edit', name: 'createpost')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function createpost(EntityManagerInterface $em, Request $request, Security $security): Response
+    {
+
+        $post = new Post();
         $user = $security->getUser();
 
         $form = $this->createForm(PostType::class, $post);
@@ -35,11 +55,11 @@ class BlogController extends AbstractController
             $post->setUser($user);
             $em->persist($post);
             $em->flush();
+            $em->flush();
             $this->addFlash('success', 'Votre post a été créé');
 
             return $this->redirectToRoute('home');
         }
-
         return $this->render('blog/index.html.twig', [
             'form' => $form->createView()
         ]);
