@@ -10,6 +10,11 @@
 			{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 				<li>
 					<button>
+						<a href="{{path('blogform')}}">Publier</a>
+					</button>
+				</li>
+				<li>
+					<button>
 						<a href="{{path('logout')}}">Déconnexion</a>
 					</button>
 				</li>
