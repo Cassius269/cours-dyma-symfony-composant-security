@@ -16,23 +16,32 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class BlogController extends AbstractController
 {
     #[Route('/edit/{id}', name: 'form')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function index(Post $post = null, EntityManagerInterface $em, Request $request, Security $security): Response
+    #[IsGranted('ROLE_USER')]
+    public function editpost(Post $post = null, EntityManagerInterface $em, Request $request, Security $security): Response
     {
-        //$post = new Post();
-        if (!$post) {
+
+        if (!$post) { // si aucun post correspondant trouvé
             throw $this->createNotFoundException('Aucun post trouvé à cet id');
         }
 
-        $form = $this->createForm(PostType::class, $post);
-        $form->handleRequest($request);
+        $user = $security->getUser();
+        // dd($user);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em->flush();
-            $this->addFlash('success', 'Votre post a été mis à jour');
+        if ($post->getUser() == $user) {
+            $form = $this->createForm(PostType::class, $post);
+            $form->handleRequest($request);
 
-            return $this->redirectToRoute('home');
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em->flush();
+                $this->addFlash('success', 'Votre post a été mis à jour');
+
+                return $this->redirectToRoute('home');
+            }
+        } else {
+            dd('edit pas ok');
+            throw $this->createNotFoundException('Vous n\'avez pas un droit de mise à jour sur ce post');
         }
+
 
         return $this->render('blog/index.html.twig', [
             'form' => $form->createView()
