@@ -40,6 +40,7 @@
 			<input type="checkbox" name="_remember_me">
 
 			Se Souvenir de moi</label>
+		<input type="hidden" name="_csrf_tocken" value="{{ csrf_token('authenticate')}}">
 	</form>
 
 	<pre>
