@@ -19,45 +19,26 @@ class BlogController extends AbstractController
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function index(Post $post, EntityManagerInterface $em, Request $request, Security $security): Response
     {
-   
-      //  dd($post);
-      //  $user = $security->getUser();
+        //$edit = $post ?? new Post();
+        if (isset($post)) {
+            dd('hello');
+        }
+        //$post = new Post();
 
-        $form = $this->createForm(PostType::class, $post);
-        $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->addFlash('success', 'Votre post a été créé');
-    
-                return $this->redirectToRoute('home');
-            }
-            
-        return $this->render('blog/index.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
-
-    #[Route('/edit', name: 'createpost')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function createpost( EntityManagerInterface $em, Request $request, Security $security): Response
-    {
-   
-        $post = new Post();
         $user = $security->getUser();
 
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $post->setCreatedAt(new \DateTimeImmutable());
-                $post->setUser($user);
-                $em->persist($post);
-                $em->flush();
-                $this->addFlash('success', 'Votre post a été créé');
-    
-                return $this->redirectToRoute('home');
-            }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post->setCreatedAt(new \DateTimeImmutable());
+            $post->setUser($user);
+            $em->persist($post);
+            $em->flush();
+            $this->addFlash('success', 'Votre post a été créé');
+
+            return $this->redirectToRoute('home');
+        }
 
         return $this->render('blog/index.html.twig', [
             'form' => $form->createView()
