@@ -15,11 +15,16 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route(path: '/blog', name: 'blog')]
 class BlogController extends AbstractController
 {
-    #[Route('/', name: 'form')]
+    #[Route('/edit/{id}', name: 'form')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function index(EntityManagerInterface $em, Request $request, Security $security): Response
+    public function index(Post $post, EntityManagerInterface $em, Request $request, Security $security): Response
     {
-        $post = new Post();
+        //$edit = $post ?? new Post();
+        if (isset($post)) {
+            dd('hello');
+        }
+        //$post = new Post();
+
         $user = $security->getUser();
         $form = $this->createForm(PostType::class, $post);
 
@@ -31,6 +36,8 @@ class BlogController extends AbstractController
             $em->persist($post);
             $em->flush();
             $this->addFlash('success', 'Votre post a été publié');
+
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('blog/index.html.twig', [
