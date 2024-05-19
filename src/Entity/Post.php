@@ -36,7 +36,7 @@ class Post
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
-    private ?user $user = null;
+    private ?User $user = null;
 
     public function getId(): ?int
     {

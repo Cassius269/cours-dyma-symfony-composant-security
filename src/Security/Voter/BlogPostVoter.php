@@ -12,8 +12,6 @@ class BlogPostVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        dump($attribute);
-        dump($subject);
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
         return in_array($attribute, [self::EDIT])
@@ -22,7 +20,6 @@ class BlogPostVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        dump($token);
         $user = $token->getUser();
         // if the user is anonymous, do not grant access
         if (!$user instanceof UserInterface) {

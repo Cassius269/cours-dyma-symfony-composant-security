@@ -12,8 +12,12 @@ class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(PostRepository $postRepository): Response
     {
+
         $posts = $postRepository->findAll();
 
+if(!$posts){
+    throw $this->createNotFoundException("Aucun article trouvé");
+}
 
         return $this->render('home/index.html.twig', [
             'posts' => $posts,

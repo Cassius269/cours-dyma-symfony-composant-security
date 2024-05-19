@@ -27,7 +27,6 @@ class BlogController extends AbstractController
         $this->denyAccessUnlessGranted('POST_EDIT', $post);
 
         $user = $security->getUser();
-        // dd($user);
 
         if ($post->getUser() == $user) {
             $form = $this->createForm(PostType::class, $post);
@@ -40,7 +39,6 @@ class BlogController extends AbstractController
                 return $this->redirectToRoute('home');
             }
         } else {
-            dd('edit pas ok');
             throw $this->createNotFoundException('Vous n\'avez pas un droit de mise à jour sur ce post');
         }
 
