@@ -94,6 +94,7 @@ form li {
 article {
   background: antiquewhite;
   padding: 2rem;
+  margin-bottom: 2rem;
 }
 
 article p {
