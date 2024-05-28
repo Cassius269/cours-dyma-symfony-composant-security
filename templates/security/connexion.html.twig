@@ -42,8 +42,4 @@
 			Se Souvenir de moi</label>
 		<input type="hidden" name="_csrf_tocken" value="{{ csrf_token('authenticate')}}">
 	</form>
-
-	<pre>
-		{{ dump(app.user) }}
-	</pre>
 {% endblock %}

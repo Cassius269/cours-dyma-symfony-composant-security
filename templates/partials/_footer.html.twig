@@ -1,5 +1,5 @@
 <ul>
-	{% for message in app.flashes(["success","erreur"]) %}
+	{% for message in app.flashes(["success","error"]) %}
 		{% for info in message %}
 			<li>{{info}}</li>
 		{% endfor %}
