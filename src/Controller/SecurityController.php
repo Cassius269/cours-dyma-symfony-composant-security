@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
+use NewUserEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -12,11 +13,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class SecurityController extends AbstractController
 {
     #[Route('/inscription', name: 'inscription')]
-    public function index(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, EventDispatcherInterface $eventDispatcher): Response
     {
         $user = new User();
 
@@ -29,7 +31,10 @@ class SecurityController extends AbstractController
             $user->setCreatedAt(new \DateTimeImmutable());
             $user->setRoles(["ROLE_USER"]);
             $entityManager->persist($user);
+            $eventDispatcher->dispatch(new NewUserEvent($user->getEmail()));
+
             $entityManager->flush();
+
             $this->addFlash('success', 'Vous êtes inscrit(e) maintenant');
             return $this->redirectToRoute('home');
         }

@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use NewUserEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
@@ -37,11 +38,17 @@ class WelcomeSubscriber implements EventSubscriberInterface
         $request->getSession()->getFlashBag()->add('success', 'Vous êtes déconnecté(e)');
     }
 
+    public function OnNewUserEvent(NewUserEvent $event)
+    {
+        $this->fs->appendToFile('Events/log.txt', $event->getEmail() . " vient de s'inscrire");
+    }
+
     public static function getSubscribedEvents(): array
     {
         return [
             LoginSuccessEvent::class => ['onLoginSuccessEvent', 150],
-            LogoutEvent::class => 'onLogoutSuccess'
+            LogoutEvent::class => 'onLogoutSuccess',
+            NewUserEvent::class => 'OnNewUserEvent'
         ];
     }
 }
