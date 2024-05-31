@@ -49,6 +49,6 @@ class WelcomeSubscriber implements EventSubscriberInterface
             LoginSuccessEvent::class => ['onLoginSuccessEvent', 150],
             LogoutEvent::class => 'onLogoutSuccess',
             NewUserEvent::class => 'OnNewUserEvent'
-        ];
+                ];
     }
 }

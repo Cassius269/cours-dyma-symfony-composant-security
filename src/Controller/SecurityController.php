@@ -21,7 +21,7 @@ class SecurityController extends AbstractController
     public function index(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, EventDispatcherInterface $eventDispatcher): Response
     {
         $user = new User();
-
+        $user->setName('Jeanne');
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
