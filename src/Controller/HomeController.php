@@ -15,9 +15,9 @@ class HomeController extends AbstractController
 
         $posts = $postRepository->findAll();
 
-if(!$posts){
-    throw $this->createNotFoundException("Aucun article trouvé");
-}
+        //   if (!$posts) {
+        //    throw $this->createNotFoundException("Aucun article trouvé");
+        //  }
 
         return $this->render('home/index.html.twig', [
             'posts' => $posts,
