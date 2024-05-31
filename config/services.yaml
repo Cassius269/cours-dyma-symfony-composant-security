@@ -22,3 +22,10 @@ services:
 
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
+
+App\EventListener\PostCreateListener:
+  tags:
+    - name: "doctrine.orm.entity_listnener"
+    - event: "prePersist"
+    - entity: App\Entity\Post
+    - method: prePersistPost
