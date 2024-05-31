@@ -3,19 +3,45 @@
 namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Event\AuthenticationSuccessEvent;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
+use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 class WelcomeSubscriber implements EventSubscriberInterface
 {
-    public function onAuthenticationSuccessEvent(AuthenticationSuccessEvent $event): void
+    public ?Filesystem $fs = null;
+
+    public function __construct(Filesystem $fileSystem)
     {
-        // ...
+        $this->fs = $fileSystem;
+    }
+
+    public function onLoginSuccessEvent(LoginSuccessEvent $event): void
+    {
+        // Ajout d'un message Flash à la connexion d'utilisateur
+        $request = $event->getRequest();
+        $username = $event->getPassport()->getUser()->getName();
+        $request->getSession()->getFlashBag()->add('success', 'welcome ' . $username);
+    }
+
+    public function onLogoutSuccess(LogoutEvent $event)
+    {
+        // dd($event);
+        $request = $event->getRequest();
+        $tocken = $event->getToken();
+        $username = $tocken->getUser()->getName();
+
+        $this->fs->mkdir('Events');
+        $this->fs->touch('Events/disconnedUser.txt');
+        $this->fs->appendTofile('Events/disconnedUser.txt', $username .  "s'est déconnecté(e)" . PHP_EOL);
+        $request->getSession()->getFlashBag()->add('success', 'Vous êtes déconnecté(e)');
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            AuthenticationSuccessEvent::class => 'onAuthenticationSuccessEvent',
+            LoginSuccessEvent::class => ['onLoginSuccessEvent', 150],
+            LogoutEvent::class => 'onLogoutSuccess'
         ];
     }
 }
