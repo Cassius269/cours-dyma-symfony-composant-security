@@ -22,7 +22,7 @@ class WelcomeSubscriber implements EventSubscriberInterface
         // Ajout d'un message Flash à la connexion d'utilisateur
         $request = $event->getRequest();
         $username = $event->getPassport()->getUser()->getName();
-        $request->getSession()->getFlashBag()->add('success', 'welcome ' . $username);
+        $request->getSession()->getFlashBag()->add('success', 'Bienvenu ' . $username);
     }
 
     public function onLogoutSuccess(LogoutEvent $event)

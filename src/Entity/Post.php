@@ -5,10 +5,12 @@ namespace App\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PostRepository;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\Mime\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
+#[ORM\HasLifecycleCallbacks()]
 class Post
 {
     #[ORM\Id]
@@ -89,5 +91,21 @@ class Post
         $this->user = $user;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function doSomething(LifecycleEventArgs $args)
+    {
+        // dd($args);
+        $user = $args->getObject()->getUser(); // recupérer l'utilisateur depuis l'évenement Doctrine
+        $user->setName("Fabien"); // Changer le nom d'utilisateur de l'auteur de la question
+        $args->getObjectManager()->flush(); // Envoyer le changement en base de donnée
+    }
+
+
+    #[ORM\PostPersist]
+    public function doSomething2(LifecycleEventArgs $args)
+    {
+        //dd($args);
     }
 }
