@@ -1,22 +1,24 @@
 <?php
 
+namespace App\Event;
+
+use App\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class NewUserEvent extends Event
 {
-    private ?string $email = null;
+    private ?User $user = null;
 
-    public function __construct(string $email)
+    public function __construct(User $user)
     {
-        $this->email = $email;
+        $this->user = $user;
     }
 
-
     /**
-     * Get the value of email
+     * Get the value of user
      */
-    public function getEmail(): string
+    public function getUser(): ?User
     {
-        return $this->email;
+        return $this->user;
     }
 }

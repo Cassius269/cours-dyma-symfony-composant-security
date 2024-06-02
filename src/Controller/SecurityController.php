@@ -4,16 +4,16 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Event\NewUserEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use NewUserEvent;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SecurityController extends AbstractController
 {
@@ -21,7 +21,7 @@ class SecurityController extends AbstractController
     public function index(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, EventDispatcherInterface $eventDispatcher): Response
     {
         $user = new User();
-        $user->setName('Jeanne');
+
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
@@ -31,7 +31,7 @@ class SecurityController extends AbstractController
             $user->setCreatedAt(new \DateTimeImmutable());
             $user->setRoles(["ROLE_USER"]);
             $entityManager->persist($user);
-            $eventDispatcher->dispatch(new NewUserEvent($user->getEmail()));
+            $eventDispatcher->dispatch(new NewUserEvent($user));
 
             $entityManager->flush();
 

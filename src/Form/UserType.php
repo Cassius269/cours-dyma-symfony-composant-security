@@ -22,16 +22,7 @@ class UserType extends AbstractType
             ->add('name')
             ->add('submit', SubmitType::class, [
                 "label" => 'S\'inscrire'
-            ])
-            ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $formEvent){
-                $data=$formEvent->getdata();
-                $form = $formEvent->getForm();
-                if($data->getName() === 'Jeanne'){
-                $form->add('surnom',TextType::class,[
-                    'mapped' => false
-                ]);
-                }
-            });
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

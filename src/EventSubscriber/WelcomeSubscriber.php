@@ -2,53 +2,41 @@
 
 namespace App\EventSubscriber;
 
-use NewUserEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use App\Event\NewUserEvent;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
+use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class WelcomeSubscriber implements EventSubscriberInterface
 {
-    public ?Filesystem $fs = null;
+    public ?MailerInterface $mailer = null;
 
-    public function __construct(Filesystem $fileSystem)
+    public function __construct(?MailerInterface $mailer)
     {
-        $this->fs = $fileSystem;
-    }
-
-    public function onLoginSuccessEvent(LoginSuccessEvent $event): void
-    {
-        // Ajout d'un message Flash à la connexion d'utilisateur
-        $request = $event->getRequest();
-        $username = $event->getPassport()->getUser()->getName();
-        $request->getSession()->getFlashBag()->add('success', 'Bienvenu ' . $username);
-    }
-
-    public function onLogoutSuccess(LogoutEvent $event)
-    {
-        // dd($event);
-        $request = $event->getRequest();
-        $tocken = $event->getToken();
-        $username = $tocken->getUser()->getName();
-
-        $this->fs->mkdir('Events');
-        $this->fs->touch('Events/disconnedUser.txt');
-        $this->fs->appendTofile('Events/disconnedUser.txt', $username .  "s'est déconnecté(e)" . PHP_EOL);
-        $request->getSession()->getFlashBag()->add('success', 'Vous êtes déconnecté(e)');
+        $this->mailer = $mailer;
     }
 
     public function OnNewUserEvent(NewUserEvent $event)
     {
-        $this->fs->appendToFile('Events/log.txt', $event->getEmail() . " vient de s'inscrire");
+        $user = $event->getUser();
+        $mailAdress = $user->getEmail();
+
+        $email = new Email();
+        $email->from('Service Client<fahamygaston@gmail.com>')
+            ->to($mailAdress)
+            ->subject('Inscription réussi')
+            ->text('Bienvenu ' . $user->getName());
+
+        $this->mailer->send($email);
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            LoginSuccessEvent::class => ['onLoginSuccessEvent', 150],
-            LogoutEvent::class => 'onLogoutSuccess',
             NewUserEvent::class => 'OnNewUserEvent'
-                ];
+        ];
     }
 }
