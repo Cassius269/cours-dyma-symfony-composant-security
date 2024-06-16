@@ -4,6 +4,25 @@
 {% endblock %}
 
 {% block body %}
+	<style>
+		#editor {
+			background: white;
+			min-height: 200px;
+		}
+
+		img {
+			width: 30%;
+		}
+	</style>
 	<h1>Je suis la page blog</h1>
-	{{form(form,{'attr':{'class':'postForm'}})}}
-	{% endblock %}
+
+	{{form_start(form)}}
+	{{form_row(form.title)}}
+	{{form_row(form.content)}}
+	<p>Content</p>
+	<div id="editor"></div>
+	{{form_rest(form)}}
+	{{form_end(form)}}
+	<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/balloon/ckeditor.js"></script>
+	<script src=" {{asset('js/ckeditor.js')}}"></script>
+{% endblock %}
